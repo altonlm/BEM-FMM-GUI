@@ -1,0 +1,22 @@
+function stl_to_mat_GUI(outputName, stlFile)
+
+[P, t, normals, ~] = stlReadAscii(stlFile);
+display(stlFile);
+
+save(outputName, 'P', 't', 'normals');
+
+if (strcat(stlFile, 'csf.stl'))
+
+    %   Find vertex neighbors and vertex normals for FS
+    DT          = triangulation(t, P); 
+    V           = vertexAttachments(DT);
+    Vnormals    = zeros(size(V, 1), 3);
+    for m = 1:size(V, 1)
+        Vnormals(m, :)  = sum(normals(V{m}, :), 1);
+        Vnormals(m, :)  = Vnormals(m, :)/norm(Vnormals(m, :));
+    end
+
+    save(['Changed_' outputName], 'P', 't', 'normals');
+end
+
+end
